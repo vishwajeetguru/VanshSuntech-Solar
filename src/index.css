@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif;
+  
+  --color-brand-blue: #1557A6;
+  --color-brand-blue-hover: #104687;
+  --color-brand-navy: #0B2545;
+  --color-brand-lightblue: #EAF3FC;
+  --color-brand-accent: #F5B82E;
+  --color-brand-accent-hover: #DE9F1D;
+  --color-brand-text: #172B45;
+  --color-brand-muted: #637083;
+  --color-brand-border: #E3EAF2;
+  --color-brand-surface: #F6F9FC;
+}
+
+@layer base {
+  body {
+    color: var(--color-brand-text);
+    background-color: #ffffff;
+    font-family: var(--font-sans);
+  }
+}
+
+/* Solar-themed keyframes */
+@keyframes solar-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float-subtle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes energy-flow {
+  0% {
+    stroke-dashoffset: 24;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes sun-glow-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.05);
+  }
+}
+
+.animate-solar-slow {
+  animation: solar-rotate 40s linear infinite;
+  transform-origin: center;
+}
+
+.animate-float-subtle {
+  animation: float-subtle 4s ease-in-out infinite;
+}
+
+.animate-sun-pulse {
+  animation: sun-glow-pulse 3s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.animate-energy-dash {
+  stroke-dasharray: 6 6;
+  animation: energy-flow 1.5s linear infinite;
+}
+
+/* CSS Sprite System for 2x3 Solar Energy Showcase Collage */
+.solar-showcase-sprite {
+  background-image: 
+    url('/Solar%20Energy%20Showcase%20Collage.png'),
+    url('/Solar Energy Showcase Collage.png'),
+    url('/solar-showcase-collage.png');
+  background-size: 300% 200%;
+  background-repeat: no-repeat;
+}
+
+.sprite-on-grid {
+  background-position: 0% 0%;
+}
+
+.sprite-off-grid {
+  background-position: 50% 0%;
+}
+
+.sprite-hybrid-solar {
+  background-position: 100% 0%;
+}
+
+.sprite-solar-water-pump {
+  background-position: 0% 100%;
+}
+
+.sprite-solar-water-heater {
+  background-position: 50% 100%;
+}
+
+.sprite-all-solar-products {
+  background-position: 100% 100%;
+}
+
+/* Accessibility: Prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
