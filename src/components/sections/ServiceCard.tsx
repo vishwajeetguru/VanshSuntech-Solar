@@ -57,12 +57,12 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, index = 0, on
   };
 
   const spriteCoordinates: Record<string, string> = {
-    'on-grid': '0% 0%',
-    'off-grid': '50% 0%',
-    'hybrid-solar': '100% 0%',
-    'solar-water-pump': '0% 100%',
-    'solar-water-heater': '50% 100%',
-    'all-solar-products': '100% 100%',
+    'on-grid': '0% 0%', // Row 1 Col 1: house rooftop solar
+    'off-grid': '50% 0%', // Row 1 Col 2: ground-mount + batteries
+    'hybrid-solar': '100% 0%', // Row 1 Col 3: panels + hybrid inverter
+    'solar-water-pump': '0% 100%', // Row 2 Col 1: pump irrigating field
+    'solar-water-heater': '50% 100%', // Row 2 Col 2: evacuated-tube heater
+    'all-solar-products': '100% 100%', // Row 2 Col 3: panels + lights + lantern
   };
 
   return (
@@ -78,26 +78,29 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, index = 0, on
       whileHover={{ y: -6, transition: { duration: 0.25 } }}
       className="flex flex-col bg-white rounded-2xl border border-[#E3EAF2] hover:border-[#1557A6]/50 hover:shadow-xl transition-all duration-300 overflow-hidden group h-full"
     >
-      {/* Visual Header Graphic with CSS Sprite from Showcase Collage */}
-      <div className="h-44 w-full bg-[#0B2545] relative overflow-hidden border-b border-[#E3EAF2]">
-        {/* Underlay Fallback */}
-        <div className="absolute inset-0">
+      {/* Visual Header Graphic with CSS Sprite from Showcase Collage (3 cols x 2 rows) */}
+      <div className="h-48 w-full bg-[#0B2545] relative overflow-hidden border-b border-[#E3EAF2]">
+        {/* Underlay Fallback (shown while sprite loads / if image missing) */}
+        <div className="absolute inset-0" aria-hidden="true">
           <SolarIllustration
             type={getIllustrationType(service.id)}
             className="w-full h-full object-cover"
           />
         </div>
 
-        {/* Primary CSS Sprite Layer */}
+        {/* Primary CSS Sprite Layer — one image, 6 cards via background-position */}
         <div
-          className={`absolute inset-0 w-full h-full transition-transform duration-700 ease-out group-hover:scale-105 solar-showcase-sprite sprite-${service.id}`}
+          role="img"
+          aria-label={`${service.title} — solar installation photo`}
+          title={service.title}
+          className="absolute inset-0 w-full h-full transition-transform duration-700 ease-out group-hover:scale-105 solar-showcase-sprite"
           style={{
             backgroundPosition: spriteCoordinates[service.id] || '0% 0%',
           }}
-        >
-          {/* Ambient Subtle Glow on Hover */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-        </div>
+        />
+        {/* Readability + hover glow overlays */}
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
         {/* Category Pill Tag */}
         {service.badge && (

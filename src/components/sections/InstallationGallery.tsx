@@ -34,6 +34,17 @@ export const InstallationGallery: React.FC = () => {
     return idx % 2 === 0 ? 'on-grid' : 'hybrid';
   };
 
+  // CSS sprite positions in solar-solutions-collage.png (3 cols x 2 rows).
+  // Keyed by item id so category filtering never misaligns the image.
+  const solutionsSpriteCoordinates: Record<string, string> = {
+    'gallery-1': '0% 0%', // Row 1 Col 1: residential rooftop solar
+    'gallery-2': '50% 0%', // Row 1 Col 2: commercial metal-sheet rooftop
+    'gallery-3': '100% 0%', // Row 1 Col 3: solar pump irrigating field
+    'gallery-4': '0% 100%', // Row 2 Col 1: evacuated-tube water heater
+    'gallery-5': '50% 100%', // Row 2 Col 2: hybrid inverter + battery bank
+    'gallery-6': '100% 100%', // Row 2 Col 3: institutional rooftop array
+  };
+
   return (
     <section id="gallery" className="py-16 lg:py-24 bg-white border-b border-[#E3EAF2] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -86,10 +97,24 @@ export const InstallationGallery: React.FC = () => {
                 className="group flex flex-col bg-white rounded-2xl border border-[#E3EAF2] hover:border-[#1557A6]/50 hover:shadow-xl transition-all duration-300 overflow-hidden h-full"
               >
                 {/* Media Container with Hover Action */}
-                <div className="relative aspect-[4/3] w-full bg-[#F6F9FC] overflow-hidden border-b border-[#E3EAF2]">
-                  <SolarIllustration
-                    type={illustrationType}
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                <div className="relative aspect-[4/3] w-full bg-[#0B2545] overflow-hidden border-b border-[#E3EAF2]">
+                  {/* Underlay Fallback (shown while sprite loads / if image missing) */}
+                  <div className="absolute inset-0" aria-hidden="true">
+                    <SolarIllustration
+                      type={illustrationType}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* Primary CSS Sprite Layer — one image, 6 cards via background-position */}
+                  <div
+                    role="img"
+                    aria-label={item.altText || item.title}
+                    title={item.title}
+                    className="absolute inset-0 w-full h-full transition-transform duration-700 ease-out group-hover:scale-105 solar-solutions-sprite"
+                    style={{
+                      backgroundPosition: solutionsSpriteCoordinates[item.id] || '0% 0%',
+                    }}
                   />
 
                   {/* Top Category Badge */}

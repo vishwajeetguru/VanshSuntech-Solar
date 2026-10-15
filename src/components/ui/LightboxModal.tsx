@@ -46,6 +46,16 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
     };
   }, [isOpen, handleKeyDown]);
 
+  // CSS sprite position in solar-solutions-collage.png (3 cols x 2 rows), keyed by item id.
+  const solutionsSpriteCoordinates: Record<string, string> = {
+    'gallery-1': '0% 0%',
+    'gallery-2': '50% 0%',
+    'gallery-3': '100% 0%',
+    'gallery-4': '0% 100%',
+    'gallery-5': '50% 100%',
+    'gallery-6': '100% 100%',
+  };
+
   const illustrationType =
     item?.category === 'Agriculture'
       ? 'water-pump'
@@ -107,7 +117,20 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
 
             {/* Media Frame */}
             <div className="relative aspect-video w-full bg-[#0B2545] overflow-hidden flex items-center justify-center">
-              <SolarIllustration type={illustrationType} className="w-full h-full object-cover" />
+              {/* Underlay Fallback */}
+              <div className="absolute inset-0" aria-hidden="true">
+                <SolarIllustration type={illustrationType} className="w-full h-full object-cover" />
+              </div>
+
+              {/* Primary CSS Sprite Layer */}
+              <div
+                role="img"
+                aria-label={item.altText || item.title}
+                className="absolute inset-0 w-full h-full solar-solutions-sprite"
+                style={{
+                  backgroundPosition: solutionsSpriteCoordinates[item.id] || '0% 0%',
+                }}
+              />
 
               {/* Navigation Arrows with Press Physics */}
               <motion.button

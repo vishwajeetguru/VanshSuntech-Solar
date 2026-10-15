@@ -81,14 +81,16 @@
   animation: energy-flow 1.5s linear infinite;
 }
 
-/* CSS Sprite System for 2x3 Solar Energy Showcase Collage */
+/* CSS Sprite System for 3x2 Solar Energy Showcase Collage
+   Single source: /public/solar-showcase-collage.png
+   Grid mapping (background-size: 300% 200%):
+   Row 1: [on-grid | off-grid | hybrid-solar]
+   Row 2: [solar-water-pump | solar-water-heater | all-solar-products] */
 .solar-showcase-sprite {
-  background-image: 
-    url('/Solar%20Energy%20Showcase%20Collage.png'),
-    url('/Solar Energy Showcase Collage.png'),
-    url('/solar-showcase-collage.png');
+  background-image: url('/solar-showcase-collage.png');
   background-size: 300% 200%;
   background-repeat: no-repeat;
+  background-color: #0b2545;
 }
 
 .sprite-on-grid {
@@ -113,6 +115,18 @@
 
 .sprite-all-solar-products {
   background-position: 100% 100%;
+}
+
+/* CSS Sprite System for 3x2 Solar Energy Solutions Collage (Our Happy Customers gallery)
+   Single source: /public/solar-solutions-collage.png
+   Grid mapping (background-size: 300% 200%):
+   Row 1: [gallery-1 residential rooftop | gallery-2 commercial rooftop | gallery-3 agri pump]
+   Row 2: [gallery-4 water heater | gallery-5 hybrid + batteries | gallery-6 institutional array] */
+.solar-solutions-sprite {
+  background-image: url('/solar-solutions-collage.png');
+  background-size: 300% 200%;
+  background-repeat: no-repeat;
+  background-color: #0b2545;
 }
 
 /* Accessibility: Prefers reduced motion */

@@ -9,20 +9,38 @@ Designed with a clean, trustworthy white-first visual theme with deep navy and c
 ## 1. How to Run the Project Locally
 
 ### Prerequisites
-- Node.js (version 18 or higher recommended)
-- npm or yarn
+- Node.js v22 (tested on v22.18.0)
+- npm v11 (tested on v11.18.0)
 
 ### Installation & Development
 ```bash
 # 1. Install all dependencies
 npm install
+# If you hit an ERESOLVE peer-dependency error (esbuild vs vite),
+# retry with legacy peer deps:
+npm install --legacy-peer-deps
 
-# 2. Start the local development server (runs on port 3000)
+# 2. Start the local development server (http://localhost:3000)
 npm run dev
 
-# 3. Compile and build for production
+# 3. Compile and build for production (outputs to dist/)
 npm run build
+
+# 4. Preview the production build locally
+npm run preview
+
+# 5. Type-check without emitting
+npm run lint
 ```
+
+> Dev server runs on port 3000 with host `0.0.0.0` (see `package.json` → `scripts.dev` and `vite.config.ts`).
+> If port 3000 is busy: `npx vite --port=3001 --host=0.0.0.0`.
+
+### Troubleshooting install (ERESOLVE)
+This repo pins `vite ^8.3.0` with `@tailwindcss/vite ^4.3.3` and `tsx` (which pulls its own nested `esbuild`).
+npm's strict peer resolution can fail with:
+`Conflicting peer dependency: esbuild@0.28.2 ... peerOptional esbuild@"^0.27.0 || ^0.28.0" from vite@8.3.4`.
+Fix: `npm install --legacy-peer-deps`. This accepts the nested esbuild copy and builds fine.
 
 ---
 
@@ -31,6 +49,9 @@ npm run build
 The application is built with a decoupled architecture where business content, presentation components, and form handlers are strictly separated:
 
 ```
+public/
+├── solar-showcase-collage.png   # 3-col x 2-row collage for Our Products and Services → /solar-showcase-collage.png
+└── solar-solutions-collage.png  # 3-col x 2-row collage for Our Happy Customers gallery → /solar-solutions-collage.png
 src/
 ├── types/
 │   └── index.ts                 # TypeScript interfaces for services, FAQs, testimonials, forms
@@ -95,8 +116,14 @@ Edit `src/components/ui/BrandLogo.tsx`:
   ```
 
 ### Replacing Gallery & Showcase Images
-In `src/data/gallery.ts`, each item contains `imageUrl` or is rendered via `SolarIllustration.tsx`.
-Simply replace the image reference with WordPress media library URLs:
+The **Our Happy Customers** gallery (`src/components/sections/InstallationGallery.tsx`, data in `src/data/gallery.ts`) uses the same CSS-sprite technique as Products & Services — one file, `public/solar-solutions-collage.png` (served as `/solar-solutions-collage.png`), sliced 3 cols × 2 rows via `.solar-solutions-sprite` in `src/index.css` (`background-size: 300% 200%`). Positions are keyed by item `id` (`solutionsSpriteCoordinates` in both `InstallationGallery.tsx` and `LightboxModal.tsx`, so category filtering never misaligns images):
+  - `gallery-1` Residential Rooftop: Col 1, Row 1 (`0% 0%`)
+  - `gallery-2` Commercial Rooftop: Col 2, Row 1 (`50% 0%`)
+  - `gallery-3` Agri Solar Pump: Col 3, Row 1 (`100% 0%`)
+  - `gallery-4` Water Heater: Col 1, Row 2 (`0% 100%`)
+  - `gallery-5` Hybrid + Batteries: Col 2, Row 2 (`50% 100%`)
+  - `gallery-6` Institutional Array: Col 3, Row 2 (`100% 100%`)
+To swap photos, overwrite `public/solar-solutions-collage.png` keeping the same 3×2 cell order. For WordPress media URLs instead, set `imageUrl` per item in `src/data/gallery.ts`:
 ```ts
 export const galleryItems: GalleryItem[] = [
   {
@@ -110,16 +137,17 @@ export const galleryItems: GalleryItem[] = [
 ```
 
 ### Using the Products & Services CSS Sprite
-The Products & Services section uses a high-performance **2-row by 3-column CSS Sprite** (`Solar Energy Showcase Collage.png`):
-- Place your collage file in the `public/` folder as `public/Solar Energy Showcase Collage.png` or `public/solar-showcase-collage.png`.
-- The sprite is automatically sliced and positioned for the 6 cards:
-  - **On-Grid Solar**: Column 1, Row 1 (`0% 0%`)
-  - **Off-Grid Solar**: Column 2, Row 1 (`50% 0%`)
-  - **Hybrid Solar**: Column 3, Row 1 (`100% 0%`)
-  - **Solar Water Pump**: Column 1, Row 2 (`0% 100%`)
-  - **Solar Water Heater**: Column 2, Row 2 (`50% 100%`)
-  - **All Solar Products**: Column 3, Row 2 (`100% 100%`)
-- Each card maintains an underlying SVG illustration fallback so cards never appear empty if the image is loading.
+The Products & Services section uses a high-performance **3-column by 2-row CSS Sprite** (`public/solar-showcase-collage.png`, served as `/solar-showcase-collage.png`):
+- The file MUST live at the repo-root `public/` folder with this exact lowercase, no-spaces name. Vite only serves `<root>/public` — `src/public/` is ignored and any `src/public/Solar Energy Showcase Collage.png` copy is stale (safe to delete).
+- The sprite is sliced in `src/index.css` (`.solar-showcase-sprite` → `background-size: 300% 200%`, single `url('/solar-showcase-collage.png')`) and positioned per card in `src/components/sections/ServiceCard.tsx` (`spriteCoordinates`):
+  - **On-Grid Solar** (`on-grid`): Col 1, Row 1 (`0% 0%`)
+  - **Off-Grid Solar** (`off-grid`): Col 2, Row 1 (`50% 0%`)
+  - **Hybrid Solar** (`hybrid-solar`): Col 3, Row 1 (`100% 0%`)
+  - **Solar Water Pump** (`solar-water-pump`): Col 1, Row 2 (`0% 100%`)
+  - **Solar Water Heater** (`solar-water-heater`): Col 2, Row 2 (`50% 100%`)
+  - **All Solar Products** (`all-solar-products`): Col 3, Row 2 (`100% 100%`)
+- Each card maintains an underlying SVG illustration fallback (`SolarIllustration`) so cards never appear empty while the image loads, plus a `role="img"` + `aria-label` on the sprite layer and a preload hint in `index.html` (`<link rel="preload" as="image" href="/solar-showcase-collage.png" />`).
+- To replace the collage: overwrite `public/solar-showcase-collage.png` keeping the same 3×2 cell order, or update `spriteCoordinates` + the `.sprite-*` classes in `src/index.css` to match the new layout.
 
 ---
 
