@@ -33,7 +33,7 @@ export const BackToTop: React.FC = () => {
           whileTap={{ scale: 0.9 }}
           type="button"
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-40 p-3.5 rounded-full bg-[#1557A6] hover:bg-[#104687] text-white shadow-xl shadow-[#1557A6]/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1557A6] focus-visible:ring-offset-2 group"
+          className="fixed bottom-24 right-7 z-40 p-3 rounded-full bg-[#1557A6] hover:bg-[#104687] text-white shadow-xl shadow-[#1557A6]/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1557A6] focus-visible:ring-offset-2 group"
           aria-label="Scroll back to top"
         >
           <ArrowUp className="w-5 h-5 transition-transform duration-300 group-hover:-translate-y-0.5" />

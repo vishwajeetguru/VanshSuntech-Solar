@@ -18,6 +18,7 @@ import { ContactSection } from './components/sections/ContactSection';
 import { Footer } from './components/layout/Footer';
 import { BackToTop } from './components/layout/BackToTop';
 import { AnimatedSection } from './components/ui/AnimatedSection';
+import { WhatsAppWidget } from './components/ui/WhatsAppWidget';
 
 export default function App() {
   const scrollToConsultation = () => {
@@ -102,6 +103,9 @@ export default function App() {
 
       {/* 13. Back to Top Floating Action Button */}
       <BackToTop />
+
+      {/* 14. Interactive WhatsApp Chat Widget */}
+      <WhatsAppWidget />
     </div>
   );
 }
